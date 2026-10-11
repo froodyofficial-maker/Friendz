@@ -1,473 +1,144 @@
-
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Friendz — Your group, together</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Rye&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:dark;--bg:#000;--panel:#171717;--line:#343434;--muted:#aaa;--white:#f8f8f8;--green:#00e637;--blue:#00b8ff;--accent:#343434}
-*{box-sizing:border-box}
-body{margin:0;background:#000;color:var(--white);font-family:"DM Sans",Arial,sans-serif;min-height:100vh}
-button,input,textarea{font:inherit}button{color:inherit;cursor:pointer}
-.hidden{display:none!important}.muted{color:var(--muted)}
-.brand{font-family:"Rye",serif;font-size:38px}
-.pill{border:1px solid #393939;background:linear-gradient(#222,#171717);border-radius:999px;padding:11px 18px;transition:.18s}
-.pill:hover{background:#303030;transform:translateY(-1px)}
-.primary{background:#f3f3f3;color:#111;border:0}
-.small{font-size:12px}.field{width:100%;background:linear-gradient(#303030,#252525);border:1px solid #424242;border-radius:9px;padding:12px;color:white}
-.label{font-weight:700;font-size:14px;display:block;margin:0 0 7px}
-.card{background:linear-gradient(145deg,#191919,#101010);border:1px solid var(--accent);border-radius:30px;box-shadow:inset 0 1px #ffffff04}
-.muted-card{background:#171717;border:1px solid var(--accent);border-radius:12px}
-.page{display:none;min-height:100vh}.page.active{display:block}
-#auth{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 16px}
-#auth .brand{font-size:58px;margin-bottom:10px}
-#authBox{width:min(100%,360px);padding:30px;background:#1b1b1b;border:1px solid #383838;border-radius:28px;text-align:center}
-#shell{display:none;min-height:100vh}
-.sidebar{position:fixed;z-index:5;left:10px;top:0;bottom:8px;width:186px;padding:20px;background:#101010;border:1px solid #2b2b2b;border-radius:0 32px 32px 0;transition:width .22s;overflow:auto}
-.sidebar.collapsed{width:54px;padding:20px 9px}
-.sidebrand{display:flex;align-items:center;gap:8px;white-space:nowrap;margin-bottom:42px}
-.sidebrand .brand{font-size:28px}
-.collapse{border-radius:7px;background:#292929;border:1px solid #454545;width:23px;height:23px;padding:0}
-.navgroup{margin-bottom:18px}
-.navitem{display:block;width:100%;text-align:left;background:transparent;border:0;border-radius:9px;padding:8px 3px;font-size:16px;white-space:nowrap}
-.navitem:hover,.navitem.active{background:#202020}
-.navsub{padding-left:14px;color:#ccc;font-size:14px}
-.navsub button{display:block;border:0;background:none;color:inherit;padding:4px 0}
-.main{margin-left:206px;min-height:100vh;padding:45px clamp(20px,5vw,72px)}
-.sidebar.collapsed~.main{margin-left:74px}
-.page-title{font-size:36px;margin:0 0 30px;font-weight:800;letter-spacing:-1px}
-.home-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin:65px auto 0;max-width:930px}
-.feature{min-height:290px;padding:34px 18px 25px;text-align:center;display:flex;align-items:center;flex-direction:column}
-.feature h3{font-size:20px;margin:0 0 16px}.feature p{font-size:14px;min-height:64px;color:#ddd}
-.arrow{margin-top:auto;width:90%;height:65px;font-size:42px;padding:0}
-.friend-grid{display:flex;flex-wrap:wrap;gap:18px}
-.friend-chip{display:flex;align-items:center;gap:13px;padding:13px 18px;min-width:210px;border-radius:36px}
-.avatar{width:64px;height:64px;border-radius:50%;object-fit:cover;background:#333;border:1px solid #454545}
-.avatar.sm{width:38px;height:38px}.avatar.lg{width:150px;height:150px}
-.profile-head{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:32px}
-.profile-head h2{font-size:36px;margin:0}
-.profile-grid{display:grid;grid-template-columns:1fr 1fr;border-radius:10px;overflow:hidden}
-.profile-grid>section{padding:18px;background:#171717;border:1px solid var(--accent);min-height:200px}
-.profile-grid h3{margin:0 0 14px}
-.watch-thumb{width:min(100%,360px);aspect-ratio:16/9;object-fit:cover;border-radius:18px;display:block;margin:14px auto}
-.chat-layout{display:grid;grid-template-columns:minmax(0,1fr) 215px;gap:22px;min-height:65vh}
-.chat-main{display:flex;flex-direction:column;min-height:60vh}
-.messages{flex:1;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:20px 8px}
-.message{display:flex;align-items:flex-start;gap:10px}.message.mine{flex-direction:row-reverse}
-.bubble{max-width:75%;background:#181818;border:1px solid #2d2d2d;border-radius:15px;padding:10px 13px;overflow-wrap:anywhere}
-.message.mine .bubble{background:#242424}
-.chat-compose{display:flex;gap:8px;padding:8px 0}.chat-compose input{flex:1;min-width:0}
-.chat-side{border-radius:25px;padding:22px 14px;background:#101010;border:1px solid var(--accent);text-align:center}
-.chat-side .avatar{width:90px;height:90px}
-.giveaway-grid{display:grid;grid-template-columns:1fr 255px;gap:36px;align-items:start}
-.prize-box{padding:25px;text-align:center;min-height:350px}
-.prize{font-size:13px;font-weight:700;margin:25px 0}
-.wide{width:min(100%,290px);margin:7px 0}
-.chance{font-size:28px;color:var(--green);font-weight:800}
-.entry-list{padding:25px;min-height:300px}
-.entry{display:flex;align-items:center;gap:12px;padding:14px;border-bottom:1px solid #2b2b2b}
-.dashboard-layout{display:grid;grid-template-columns:1fr 210px;gap:24px}
-.color-panel{padding:22px;text-align:center}
-.swatch{height:110px;border-radius:12px;border:1px solid #555;background:#292929;display:grid;place-items:center;margin:20px 0}
-.setup-center{max-width:560px;margin:10vh auto;text-align:center}
-.setup-form{padding:26px;text-align:left;display:grid;gap:16px}
-.collection-tile{width:122px;min-height:100px;display:inline-grid;place-items:center;background:#252525;border:1px solid #444;border-radius:10px;font-size:12px;margin:5px;padding:10px;overflow-wrap:anywhere}
-.discord-logo{width:230px;height:230px;border-radius:34px;background:#21002e;display:grid;place-items:center;font-family:monospace;font-size:39px;font-weight:900;letter-spacing:7px;text-align:center;margin:36px 0 22px}
-.discord-logo span{color:#ef00ff;text-shadow:-3px 3px #00d9ff}
-.blue-link{color:#00b9ff}.empty{color:#888;padding:20px;text-align:center}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:30;background:#222;border:1px solid #555;border-radius:12px;padding:12px 18px;max-width:90vw}
-@media(max-width:760px){
- .sidebar{left:0;width:54px;padding:20px 9px;border-radius:0 22px 22px 0}
- .sidebar:not(.mobile-open){width:0;padding-left:0;padding-right:0;border:0}
- .sidebar.mobile-open{width:190px;padding:20px}
- .main,.sidebar.collapsed~.main{margin-left:42px;padding:26px 16px}
- .home-cards{grid-template-columns:1fr;gap:14px;margin-top:25px}
- .feature{min-height:210px}.feature p{min-height:30px}
- .page-title{font-size:30px;margin-bottom:24px}
- .chat-layout,.profile-grid,.giveaway-grid,.dashboard-layout{grid-template-columns:1fr}
- .chat-side{display:none}.avatar.lg{width:110px;height:110px}
- .profile-head h2{font-size:28px}.brand{font-size:32px}
- .sidebar .sidebrand .brand,.sidebar .navtext,.sidebar .navsub{display:none}
- .sidebar.mobile-open .sidebrand .brand,.sidebar.mobile-open .navtext,.sidebar.mobile-open .navsub{display:block}
-}
+:root{color-scheme:dark;--bg:#000;--panel:#171717;--panel2:#1c1c1c;--line:#343434;--muted:#aaa;--white:#f8f8f8;--green:#00e637;--blue:#00b8ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--white);font-family:"DM Sans",Arial,sans-serif;min-height:100vh}button,input,textarea,select{font:inherit}button{color:inherit;cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #aaa;outline-offset:2px}
+.hidden{display:none!important}.muted{color:var(--muted)}.brand{font-family:"Rye",serif;font-size:38px;letter-spacing:-1px}.pill{border:1px solid #393939;background:linear-gradient(#222,#171717);border-radius:999px;padding:11px 18px;transition:.18s}.pill:hover{background:#303030;transform:translateY(-1px)}.primary{background:#f3f3f3;color:#111;border:0}.danger{color:#ff7777}.small{font-size:12px}.field{width:100%;background:linear-gradient(#303030,#252525);border:1px solid #424242;border-radius:9px;padding:12px;color:white}.label{font-weight:700;font-size:14px;display:block;margin:0 0 7px}.card{background:linear-gradient(145deg,#191919,#101010);border:1px solid #303030;border-radius:30px;box-shadow:inset 0 1px #ffffff04}.muted-card{background:#171717;border:1px solid #303030;border-radius:12px}.page{display:none;min-height:100vh}.page.active{display:block}
+#auth{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 16px}#auth .brand{font-size:58px;margin-bottom:10px}#auth h2{margin:0 0 18px;font-size:23px}#authBox{width:min(100%,360px);min-height:180px;padding:30px;background:#1b1b1b;border:1px solid #383838;border-radius:28px;display:flex;flex-direction:column;gap:12px;text-align:center}
+#shell{display:none;min-height:100vh}.sidebar{position:fixed;z-index:5;left:10px;top:0;bottom:8px;width:186px;padding:20px 20px 26px;background:#101010;border:1px solid #2b2b2b;border-radius:0 32px 32px 0;transition:width .22s;overflow:hidden}.sidebar.collapsed{width:54px;padding:20px 9px}.sidebrand{display:flex;align-items:center;gap:8px;white-space:nowrap;margin:0 0 42px 0}.sidebrand .brand{font-size:28px}.collapse{border-radius:7px;background:#292929;border:1px solid #454545;width:23px;height:23px;padding:0;font-weight:800}.navgroup{margin-bottom:18px}.navitem{display:block;width:100%;text-align:left;background:transparent;border:0;border-radius:9px;padding:8px 3px;font-size:17px;white-space:nowrap}.navitem:hover,.navitem.active{color:white;background:#202020}.navsub{padding:0 0 0 14px;color:#ccc;font-size:14px}.navsub button{display:block;border:0;background:none;color:inherit;padding:3px 0;cursor:pointer}.main{margin-left:206px;min-height:100vh;padding:45px clamp(24px,5vw,72px);transition:margin-left .22s}.sidebar.collapsed~.main{margin-left:74px}.topback{display:none}.page-title{font-size:36px;margin:0 0 40px;font-weight:800;letter-spacing:-1px}.home-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;margin:65px auto 0;max-width:930px}.feature{min-height:310px;padding:34px 18px 25px;text-align:center;display:flex;align-items:center;flex-direction:column}.feature h3{font-size:20px;margin:0 0 16px}.feature p{font-size:14px;min-height:64px;color:#ddd}.arrow{margin-top:auto;width:90%;height:68px;font-size:42px;padding:0}
+.friend-grid{display:flex;flex-wrap:wrap;gap:24px}.friend-chip{display:flex;align-items:center;gap:13px;padding:13px 20px;min-width:210px;border-radius:36px;cursor:pointer}.avatar{width:64px;height:64px;border-radius:50%;object-fit:cover;background:#333;border:1px solid #454545}.avatar.sm{width:38px;height:38px}.avatar.lg{width:170px;height:170px}.online-dot{width:15px;height:15px;background:#00d639;border:2px solid #252525;border-radius:50%;display:inline-block;margin-left:-24px;margin-top:48px}.friend-chip strong{font-size:19px}.profile-head{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:32px}.profile-head h2{font-size:38px;margin:0}.profile-grid{display:grid;grid-template-columns:1fr 1fr;border-radius:10px;overflow:hidden}.profile-grid>section{padding:18px;background:#171717;border:1px solid #303030;min-height:230px}.profile-grid h3{margin:0 0 14px}.watch-thumb{width:min(100%,360px);aspect-ratio:16/9;object-fit:cover;border-radius:22px;display:block;margin:14px auto 0;background:#252525}.watch-embed{width:100%;max-width:380px;aspect-ratio:16/9;border:0;border-radius:16px;margin-top:12px}.chat-layout{display:grid;grid-template-columns:minmax(0,1fr) 215px;gap:22px;min-height:calc(100vh - 90px)}.chat-main{display:flex;flex-direction:column;min-height:65vh}.messages{flex:1;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:20px 8px}.message{display:flex;align-items:flex-start;gap:10px}.message .bubble{max-width:75%;background:#181818;border:1px solid #2d2d2d;border-radius:15px;padding:10px 13px;overflow-wrap:anywhere}.message.mine{flex-direction:row-reverse}.message.mine .bubble{background:#242424}.chat-compose{display:flex;gap:8px;padding:8px 0 0}.chat-compose input{flex:1}.chat-side{border-radius:30px;padding:25px 15px;background:#101010;border:1px solid #333;text-align:center}.chat-side .avatar{width:90px;height:90px}.watch-status{margin-top:80px;font-size:12px}.watch-status img{width:100%;border-radius:14px;margin-top:12px}.discord-logo{width:255px;height:255px;border-radius:34px;background:#21002e;display:grid;place-items:center;font-family:monospace;font-size:39px;font-weight:900;letter-spacing:7px;color:white;text-align:center;margin:36px 0 22px}.discord-logo span{color:#ef00ff;text-shadow:-3px 3px #00d9ff}.blue-link{color:#00b9ff}
+.giveaway-grid{display:grid;grid-template-columns:1fr 255px;gap:36px;align-items:start}.prize-box{padding:25px;text-align:center;min-height:350px}.prize-box h2{font-size:29px;margin:0}.prize{font-size:13px;font-weight:700;margin:25px 0}.wide{width:min(100%,290px);margin:7px 0}.chance{font-size:28px;color:var(--green);font-weight:800}.entry-list{padding:25px;min-height:350px}.entry{display:flex;align-items:center;gap:12px;padding:14px;border-bottom:1px solid #2b2b2b}.dashboard-layout{display:grid;grid-template-columns:1fr 210px;gap:24px}.color-panel{padding:22px;text-align:center}.swatch{height:130px;border-radius:12px;border:1px solid #555;background:#292929;display:grid;place-items:center;margin:20px 0;cursor:pointer}.setup-center{max-width:560px;margin:13vh auto;text-align:center}.setup-center h2{font-size:23px}.setup-center p{line-height:1.6}.setup-form{padding:26px;text-align:left;display:grid;gap:16px}.setup-form .field{margin-bottom:4px}.collection-tile{width:122px;height:155px;display:grid;place-items:center;background:#252525;border:1px solid #444;border-radius:10px;font-size:12px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:30;background:#222;border:1px solid #555;border-radius:12px;padding:12px 18px;max-width:90vw}.empty{color:#888;padding:20px;text-align:center}
+@media(max-width:760px){.sidebar{left:0;width:54px;padding:20px 9px;border-radius:0 22px 22px 0}.sidebar:not(.mobile-open){width:0;padding-left:0;padding-right:0;border:0}.sidebar.mobile-open{width:190px;padding:20px}.main,.sidebar.collapsed~.main{margin-left:42px;padding:28px 16px}.home-cards{grid-template-columns:1fr;gap:14px;margin-top:25px}.feature{min-height:220px}.feature p{min-height:30px}.page-title{font-size:30px;margin-bottom:24px}.chat-layout{grid-template-columns:1fr}.chat-side{display:none}.profile-grid,.giveaway-grid,.dashboard-layout{grid-template-columns:1fr}.avatar.lg{width:115px;height:115px}.profile-head h2{font-size:28px}.brand{font-size:32px}.discord-logo{width:210px;height:210px}.setup-center{margin:8vh auto}.sidebar .sidebrand .brand,.sidebar .navtext,.sidebar .navsub{display:none}.sidebar.mobile-open .sidebrand .brand,.sidebar.mobile-open .navtext,.sidebar.mobile-open .navsub{display:block}.sidebar.mobile-open .sidebrand{justify-content:space-between}.sidebrand{margin-bottom:35px}.navitem{font-size:14px}}
 </style>
 </head>
 <body>
-
 <section id="auth" class="page active">
- <div class="brand">Friendz</div>
- <h2>Welcome to your space</h2>
- <div id="authBox">
-  <p id="authStatus" class="muted">Connecting to Friendz…</p>
-  <p class="small muted">No login screen. Your profile is saved to this browser.</p>
- </div>
+ <div class="brand">Friendz</div><h2>Welcome to your space</h2>
+ <div id="authBox"><p id="authStatus" class="muted">Connecting to Friendz…</p><p class="small muted">No login screen. Your profile is saved to this browser session.</p></div>
 </section>
-
 <section id="setup" class="page">
- <div class="setup-center">
-  <div class="brand">Friendz</div><h2>Let's get you set up!</h2>
-  <p class="muted">Create your profile. You can change these details later.</p>
-  <form id="setupForm" class="card setup-form">
-   <div><label class="label">Username</label><input id="setupName" class="field" maxlength="24" required placeholder="e.g. User122"></div>
-   <div><label class="label">Profile picture URL (optional)</label><input id="setupAvatar" class="field" type="url" placeholder="https://..."></div>
-   <div><label class="label">About you</label><textarea id="setupBio" class="field" maxlength="160" rows="2" placeholder="Tell your friends about yourself"></textarea></div>
-   <div><label class="label">Currently watching / listening</label><input id="setupWatching" class="field" placeholder="YouTube or YouTube Music link"></div>
-   <button class="pill primary" type="submit">Finish setup →</button>
-  </form>
- </div>
+ <div class="setup-center"><div class="brand">Friendz</div><h2>Let's get you set up!</h2><p class="muted">Make your profile yours. You can change these details later in your dashboard.</p>
+ <form id="setupForm" class="card setup-form">
+  <div><label class="label">Username</label><input id="setupName" class="field" maxlength="24" required placeholder="e.g. User122"></div>
+  <div><label class="label">Profile picture URL (optional)</label><input id="setupAvatar" class="field" type="url" placeholder="https://..."></div>
+  <div><label class="label">About you</label><textarea id="setupBio" class="field" maxlength="160" rows="2" placeholder="Yo I'm very tuff n stuff"></textarea></div>
+  <div><label class="label">What are you playing / watching? (optional)</label><input id="setupWatching" class="field" placeholder="YouTube or YouTube Music link"></div>
+  <button class="pill primary" type="submit">Finish setup →</button>
+ </form></div>
 </section>
-
 <section id="welcome" class="page">
- <div class="setup-center"><h2 id="welcomeTitle">Welcome!</h2>
- <p>Your profile is ready. Explore your Friendz space.</p>
- <button class="pill wide" data-page="dashboard">Dashboard</button>
- <button class="pill wide" data-page="guide">Guide</button></div>
+ <div class="setup-center"><h2 id="welcomeTitle">Welcome!</h2><p>Your account has been created successfully! Visit your dashboard. Once you're done, take a look at our guide to help you get started!</p><button class="pill wide" data-page="dashboard">Dashboard</button><button class="pill wide" data-page="guide">Guide</button></div>
 </section>
-
 <div id="shell">
  <aside class="sidebar" id="sidebar">
-  <div class="sidebrand"><span class="brand">Friendz</span><button class="collapse" id="collapseBtn">›</button></div>
-  <div class="navgroup"><button class="navitem active" data-page="home"><span class="navtext">Home</span></button><div class="navsub"><button data-page="friends">Friends</button><button data-page="chat">Chat</button></div></div>
-  <div class="navgroup"><button class="navitem" data-page="giveaways"><span class="navtext">Giveaways</span></button><div class="navsub"><button data-page="entries">Updates / Entries</button></div></div>
+  <div class="sidebrand"><span class="brand">Friendz</span><button class="collapse" id="collapseBtn" title="Collapse menu">›</button></div>
+  <div class="navgroup"><button class="navitem active" data-page="home"> <span class="navtext">Home</span></button><div class="navsub"><button data-page="friends">Friends</button><button data-page="chat">Chat</button></div></div>
+  <div class="navgroup"><button class="navitem" data-page="giveaways"><span class="navtext">Giveaways</span></button><div class="navsub"><button data-page="entries">Updates</button></div></div>
   <div class="navgroup"><button class="navitem" data-page="games"><span class="navtext">Games</span></button></div>
   <div class="navgroup"><button class="navitem" data-page="dashboard"><span class="navtext">Dashboard</span></button></div>
   <div class="navgroup"><button class="navitem" data-page="public"><span class="navtext">Public Chat</span></button></div>
   <div class="navgroup"><button class="navitem" data-page="discord"><span class="navtext">Discord</span></button></div>
+  <div class="navgroup"><button class="navitem" id="logoutBtn"><span class="navtext">Log out</span></button></div>
  </aside>
-
  <main class="main">
-  <section id="home" class="page active">
-   <h1 class="page-title">Home</h1>
-   <div class="home-cards">
-    <article class="card feature"><h3>Chat with friends!</h3><p>Chat privately with your friends.</p><button class="pill arrow" data-page="friends">→</button></article>
-    <article class="card feature"><h3>Make it yours</h3><p>Customize your profile, colours, and shared activity.</p><button class="pill arrow" data-page="dashboard">→</button></article>
-    <article class="card feature"><h3>Giveaways</h3><p>Participate in giveaways and check your odds.</p><button class="pill arrow" data-page="giveaways">→</button></article>
-   </div>
-  </section>
-
-  <section id="friends" class="page">
-   <h1 class="page-title">Friends</h1>
-   <div class="muted-card" style="padding:20px;margin-bottom:22px">
-    <h3>Add a friend</h3><p class="muted small">Find someone by exact username. Private chat unlocks after acceptance.</p>
-    <form id="friendSearchForm" style="display:flex;gap:8px;flex-wrap:wrap">
-     <input id="friendSearchInput" class="field" maxlength="24" placeholder="Exact username" required style="flex:1;min-width:180px">
-     <button class="pill" type="submit">Find &amp; request</button>
-    </form>
-   </div>
-   <div class="profile-grid" style="margin-bottom:24px">
-    <section><h3>Incoming requests</h3><div id="incomingRequests" class="friend-grid"></div></section>
-    <section><h3>Sent requests</h3><div id="outgoingRequests" class="friend-grid"></div></section>
-   </div>
-   <h3>Your friends</h3><div id="friendGrid" class="friend-grid"></div>
-   <p class="muted small">Only accepted friends can open private chats.</p>
-  </section>
-
-  <section id="chat" class="page">
-   <button class="pill" data-page="friends">← Friends</button><h2>Chat</h2>
-   <div class="chat-layout"><div class="chat-main">
-    <div id="directMessages" class="messages"></div>
-    <form id="directForm" class="chat-compose"><input id="directInput" class="field" placeholder="Say anything..." maxlength="1000" required><button class="pill" type="submit">Send</button></form>
-   </div><aside id="chatProfile" class="chat-side"></aside></div>
-  </section>
-
-  <section id="public" class="page">
-   <h1 class="page-title">Public Chat</h1><p class="muted">Everybody on Friendz can talk here.</p>
-   <div class="chat-main"><div id="publicMessages" class="messages"></div>
-    <form id="publicForm" class="chat-compose"><input id="publicInput" class="field" maxlength="1000" placeholder="Say something to everyone..." required><button class="pill" type="submit">Send</button></form>
-   </div>
-  </section>
-
-  <section id="profile" class="page"><button class="pill" data-page="friends">← Friends</button><h1 class="page-title">Profile</h1><div id="profileContent"></div></section>
-
-  <section id="dashboard" class="page">
-   <h1 class="page-title">Dashboard | Profile</h1>
-   <div class="dashboard-layout"><div>
-    <div class="profile-head"><img id="dashAvatar" class="avatar lg" alt="Profile picture"><div style="flex:1;min-width:220px">
-     <h2 id="dashName">User</h2><textarea id="dashBio" class="field" rows="2" maxlength="160" placeholder="Tell your friends about yourself"></textarea>
-     <label class="label" style="margin-top:12px">Currently watching (YouTube / YouTube Music URL)</label>
-     <input id="dashWatching" class="field" placeholder="Paste a YouTube link">
-     <button class="pill" id="saveProfile" style="margin-top:12px">Save profile</button>
-    </div></div>
-    <div class="profile-grid">
-     <section><h3>Game Collection</h3><div id="collectionTiles"></div>
-      <form id="gameForm" style="display:flex;gap:8px;margin-top:15px"><input class="field" id="gameName" placeholder="Add a game" maxlength="60" required><button class="pill" type="submit">+</button></form>
-     </section>
-     <section><h3>Currently watching</h3><div id="dashWatchPreview" class="muted">Nothing shared yet</div></section>
-    </div>
-   </div>
-   <aside class="muted-card color-panel"><h2>Colours</h2><p class="small">Choose your accent colour.</p>
-    <input type="color" id="accentColor" value="#343434" style="width:100%;height:70px;background:transparent;border:0">
-    <div class="swatch" id="swatch">Preview</div><button class="pill" id="applyColor">Apply colour</button>
-   </aside></div>
-   <button class="pill" id="editSetup" style="margin-top:20px">Edit profile setup</button>
-  </section>
-
-  <section id="giveaways" class="page">
-   <h1 class="page-title">Giveaways</h1><p>Random giveaways with random prizes!</p>
-   <div class="giveaway-grid" style="margin-top:35px"><div>
-    <h2>Enter Giveaway</h2><p>Click enter to reserve one spot for yourself!</p>
-    <button id="enterGiveaway" class="pill wide">Enter Giveaway</button>
-    <button class="pill wide" data-page="entries">See all entries</button>
-    <div style="margin-top:35px"><h2>Chances of winning</h2><div id="chance" class="chance">—</div><p id="giveawayCountdown" class="muted"></p></div>
-   </div>
-   <aside class="muted-card prize-box"><h2>Prizes</h2><p>Winner picks one</p>
-    <div class="prize">Google AI Pro | 18 Months</div><div class="prize">Random Steam Game</div><div class="prize">Among Us</div><div class="prize">Ghostbusters: The Video Game</div>
-   </aside></div>
-  </section>
-
-  <section id="entries" class="page"><h1 class="page-title">Giveaways | Entries</h1><p>Everyone who has entered appears here:</p><div id="entriesList" class="muted-card entry-list"></div></section>
-  <section id="discord" class="page"><h1 class="page-title">Discord</h1><p>Join our Tuff Guyz server for events, giveaways and tournaments!</p><div class="discord-logo">TUFF<br><span>GUYZ</span></div><a class="blue-link" href="https://discord.gg/tuffguyz" target="_blank" rel="noopener">https://discord.gg/tuffguyz</a> <button class="pill" id="copyDiscord">Copy</button></section>
-  <section id="games" class="page"><h1 class="page-title">Games</h1><p>Your game collection.</p><div id="gamesPage" class="friend-grid"></div><button class="pill" data-page="dashboard">Add games in Dashboard</button></section>
-  <section id="guide" class="page"><h1 class="page-title">Guide</h1><div class="muted-card" style="padding:24px;max-width:760px;line-height:1.8"><h2>Welcome to Friendz</h2><ol><li>Create your profile and add a picture.</li><li>Open Friends to find people and send requests.</li><li>Private chats unlock after the request is accepted.</li><li>Use Public Chat to talk to everyone.</li><li>Paste a YouTube or YouTube Music link in Dashboard to share what you're watching.</li><li>Enter the giveaway before the five-day timer expires.</li></ol><p class="muted">Watching activity is shared using the link you provide; a website cannot automatically detect everything you watch in other apps.</p></div></section>
+  <section id="home" class="page active"><h1 class="page-title">Home</h1><div class="home-cards">
+   <article class="card feature"><h3>Chat with friends!</h3><p>Chat with people you're friends with!</p><button class="pill arrow" data-page="friends">→</button></article>
+   <article class="card feature"><h3>Make it yours</h3><p>Customize how your profile looks, and link your other social accounts</p><button class="pill arrow" data-page="dashboard">→</button></article>
+   <article class="card feature"><h3>Giveaways</h3><p>Participate in awesome giveaways!</p><button class="pill arrow" data-page="giveaways">→</button></article>
+  </div></section>
+  <section id="friends" class="page"><h1 class="page-title">Friends</h1>
+  <div class="muted-card" style="padding:20px;margin-bottom:22px"><h3 style="margin-top:0">Add a friend</h3><p class="muted small">Search by exact username and send a request. Direct messages unlock after they accept.</p><form id="friendSearchForm" style="display:flex;gap:8px;flex-wrap:wrap"><input id="friendSearchInput" class="field" maxlength="24" placeholder="Exact username" required style="flex:1;min-width:180px"><button class="pill" type="submit">Find &amp; request</button></form></div>
+  <div class="profile-grid" style="margin-bottom:24px"><section><h3>Incoming requests</h3><div id="incomingRequests" class="friend-grid"></div></section><section><h3>Sent requests</h3><div id="outgoingRequests" class="friend-grid"></div></section></div>
+  <h3>Your friends</h3><div id="friendGrid" class="friend-grid"></div><div class="muted small" style="margin-top:28px">Only accepted friends can open private chats.</div></section>
+  <section id="chat" class="page"><button class="pill" data-page="friends">←</button><h2>Chat</h2><div class="chat-layout"><div class="chat-main"><div id="directMessages" class="messages"></div><form id="directForm" class="chat-compose"><input id="directInput" class="field" placeholder="Say anything..." maxlength="1000" required><button class="pill" type="submit">Send</button></form></div><aside id="chatProfile" class="chat-side"></aside></div></section>
+  <section id="public" class="page"><h1 class="page-title">Public Chat</h1><p class="muted">Everybody on Friendz can talk here.</p><div class="chat-main" style="min-height:65vh"><div id="publicMessages" class="messages"></div><form id="publicForm" class="chat-compose"><input id="publicInput" class="field" maxlength="1000" placeholder="Say something to everyone..." required><button class="pill" type="submit">Send</button></form></div></section>
+  <section id="profile" class="page"><button class="pill" data-page="friends">←</button><h1 class="page-title">Profile</h1><div id="profileContent"></div></section>
+  <section id="dashboard" class="page"><button class="pill" data-page="profile">←</button><h2>Dashboard | Profile</h2><div class="dashboard-layout"><div><div class="profile-head" style="margin-top:45px"><img id="dashAvatar" class="avatar lg"><div style="flex:1;min-width:220px"><h2 id="dashName">User</h2><textarea id="dashBio" class="field" rows="2" maxlength="160" placeholder="Tell your friends about yourself"></textarea><label class="label" style="margin-top:12px">Currently watching (YouTube / YouTube Music URL)</label><input id="dashWatching" class="field" placeholder="Paste a YouTube link"><button class="pill" id="saveProfile" style="margin-top:12px">Save profile</button></div></div>
+   <div class="profile-grid"><section><h3>Game Collection</h3><div id="collectionTiles"><div class="collection-tile">None</div></div><form id="gameForm" style="display:flex;gap:8px;margin-top:15px"><input class="field" id="gameName" placeholder="Add a game" maxlength="60" required><button class="pill" type="submit">+</button></form></section><section><h3>Currently watching</h3><div id="dashWatchPreview" class="muted">Nothing shared yet</div></section></div></div>
+   <aside class="muted-card color-panel"><h2>Colours</h2><p class="small">Choose your accent colour. The glass will be tinted to the colour you choose.</p><input type="color" id="accentColor" value="#292929" style="width:100%;height:70px;background:transparent;border:0;cursor:pointer"><div class="swatch" id="swatch">Preview</div><button class="pill" id="applyColor">Apply colour</button></aside>
+  </div><div style="margin-top:20px"><button class="pill" id="editSetup">Edit setup</button></div></section>
+  <section id="giveaways" class="page"><h1 class="page-title" style="margin-bottom:5px">Giveaways</h1><p>Welcome to giveaways! Over here we host random giveaways with random prizes.</p><div class="giveaway-grid" style="margin-top:45px"><div><h2>Enter Giveaway</h2><p>Click enter to reserve one spot for yourself!</p><button id="enterGiveaway" class="pill wide">Enter Giveaway</button><button id="seeEntries" class="pill wide" data-page="entries">See all entries</button><div style="margin:40px 0 0 8px"><h2>Chances of winning</h2><div id="chance" class="chance">—</div><p id="giveawayCountdown" class="muted"></p></div></div><aside class="muted-card prize-box"><h2>Prizes</h2><p>Winner picks any of the following</p><div class="prize">Google AI Pro | 18 Months</div><div class="prize">Random Steam Game</div><div class="prize">Among Us</div><div class="prize">Ghostbusters: The Video Game</div></aside></div></section>
+  <section id="entries" class="page"><h1 class="page-title" style="margin-bottom:5px">Giveaways | Entries</h1><p>All of the people who have entered appear here:</p><div id="entriesList" class="muted-card entry-list" style="margin-top:20px"></div></section>
+  <section id="discord" class="page"><h1 class="page-title" style="margin-bottom:8px">Discord</h1><p>Link your Discord and join our official server, Tuff Guyz to participate in several events including giveaways, tournaments and more!</p><div class="discord-logo">TUFF<br><span>GUYZ</span></div><a class="blue-link" href="https://discord.gg/tuffguyz" target="_blank" rel="noopener">https://discord.gg/tuffguyz</a> <button class="pill" id="copyDiscord">Copy</button></section>
+  <section id="games" class="page"><h1 class="page-title">Games</h1><p>Keep your group’s game collection here.</p><div id="gamesPage" class="friend-grid"></div><button class="pill" data-page="dashboard">Add games in Dashboard</button></section>
+  <section id="guide" class="page"><h1 class="page-title">Guide</h1><div class="muted-card" style="padding:24px;max-width:760px;line-height:1.8"><h2>Welcome to Friendz</h2><ol><li>Complete your setup and add a profile picture.</li><li>Open Friends to find group members and start a direct chat.</li><li>Use Public Chat to message everyone in the group.</li><li>Paste a YouTube or YouTube Music link in Dashboard to share what you're watching.</li><li>Enter the giveaway before its five-day timer expires.</li></ol><p class="muted">Watching activity is shared by the user: websites cannot automatically see what you watch in another tab or app. Automatic browser-wide detection would require an optional browser extension.</p></div></section>
  </main>
 </div>
 <div id="toast" class="toast hidden" role="status"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL="https://irvotsdphtijjimuvviu.supabase.co";
-const SUPABASE_KEY="sb_publishable_92V2L2UHtTZpKj9aKvJ-Sw_cKn5kw_";
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const defaultAvatar="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><rect width="100%" height="100%" fill="#292929"/><circle cx="60" cy="43" r="22" fill="#777"/><path d="M18 120c3-32 20-48 42-48s39 16 42 48" fill="#777"/></svg>');
-let currentUser=null,me=null,profiles=[],selectedFriend=null;
-let messages={public:[],direct:[]},games=[],entries=[],giveawayEnds=Date.now()+5*86400000;
-let realtime=null,acceptedFriendIds=new Set(),friendRequests=[];
-
-function toast(t){const e=$("#toast");e.textContent=t;e.classList.remove("hidden");clearTimeout(toast.timer);toast.timer=setTimeout(()=>e.classList.add("hidden"),3500)}
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function safeUrl(s){try{const u=new URL(s);return ["https:","http:"].includes(u.protocol)?u.href:""}catch{return ""}}
-function showPage(id){
- $$(".page").forEach(p=>p.classList.remove("active"));
- $("#"+id)?.classList.add("active");
- if(id==="friends"){loadFriendRequests();renderFriends()}
- if(id==="profile")renderProfile();
- if(id==="dashboard")loadDashboard();
- if(id==="entries")renderEntries();
- if(id==="giveaways")renderGiveaway();
- if(id==="public")loadPublic();
- if(id==="chat"){renderMessages("direct");renderChatSide();loadDirectMessages()}
- $$(".navitem").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
- if(innerWidth<760)$("#sidebar").classList.remove("mobile-open");
-}
+/* Friendz setup: paste your Supabase Project URL and anon/publishable key below. Never use service_role here. */
+const SUPABASE_URL = "https://irvotsdphtijjimuvviu.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_92V2L2UHtTZpKj9aKvJ-Sw_cKn5kw_9";
+const configured = SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.includes("YOUR_") && SUPABASE_ANON_KEY.length > 20 && !SUPABASE_ANON_KEY.includes("YOUR_");
+const sb = configured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const defaultAvatar = "data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><rect width="100%" height="100%" fill="#292929"/><circle cx="60" cy="43" r="22" fill="#777"/><path d="M18 120c3-32 20-48 42-48s39 16 42 48" fill="#777"/></svg>');
+let currentUser=null, me=null, profiles=[], selectedFriend=null, authMode="signup", messages={public:[],direct:[]}, games=[], entries=[], giveawayEnds=Date.now()+5*24*60*60*1000, poller=null, realtime=null, acceptedFriendIds=new Set(), friendRequests=[];
+const demoProfiles=[
+ {id:"demo112",username:"User 112",bio:"Yo I'm very tuff n stuff",avatar:defaultAvatar,watching:"https://www.youtube.com/watch?v=jfKfPfyJRdk",online:true},
+ {id:"demosam",username:"Samion",bio:"",avatar:defaultAvatar,watching:"",online:true}
+];
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.remove("hidden");clearTimeout(toast.timer);toast.timer=setTimeout(()=>e.classList.add("hidden"),3200)}
+function showPage(id){const shell=$("#shell");if(shell)shell.style.display="block";$$(".page").forEach(p=>p.classList.remove("active"));$("#"+id)?.classList.add("active");if(id==="friends"){loadFriendRequests();renderFriends();}if(id==="profile")renderProfile();if(id==="dashboard")loadDashboard();if(id==="entries")renderEntries();if(id==="giveaways")renderGiveaway();if(id==="public")renderMessages("public");if(id==="chat"){renderMessages("direct");renderChatSide()}$$(".navitem").forEach(b=>b.classList.toggle("active",b.dataset.page===id));if(innerWidth<760)$("#sidebar").classList.remove("mobile-open")}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b){e.preventDefault();showPage(b.dataset.page)}});
 $("#collapseBtn").onclick=()=>{if(innerWidth<760)$("#sidebar").classList.toggle("mobile-open");else $("#sidebar").classList.toggle("collapsed")};
-
-function youtubeId(url){
- try{const u=new URL(url);if(u.hostname.includes("youtu.be"))return u.pathname.slice(1);if(u.searchParams.get("v"))return u.searchParams.get("v");if(u.pathname.includes("/shorts/"))return u.pathname.split("/shorts/")[1].split("/")[0];if(u.pathname.includes("/embed/"))return u.pathname.split("/embed/")[1].split("/")[0]}catch{}return "";
-}
-function watchMarkup(url){
- if(!url)return '<div class="muted">Nothing shared yet</div>';
- const clean=safeUrl(url);if(!clean)return '<div class="muted">Invalid link</div>';
- const id=youtubeId(clean);
- if(id)return `<a href="${clean}" target="_blank" rel="noopener"><img class="watch-thumb" src="https://img.youtube.com/vi/${encodeURIComponent(id)}/hqdefault.jpg" alt="YouTube thumbnail"></a><p class="small muted">Shared YouTube link · <a class="blue-link" target="_blank" rel="noopener" href="${clean}">Open video</a></p>`;
- return `<p><a class="blue-link" href="${clean}" target="_blank" rel="noopener">Open shared listening link ↗</a></p><p class="small muted">YouTube Music links may not provide a thumbnail.</p>`;
-}
-function profileById(id){return profiles.find(p=>p.id===id)||{id,username:"Friend",bio:"",avatar:defaultAvatar,watching:""}}
-async function loadProfiles(){
- const {data,error}=await sb.from("profiles").select("*").order("username");
- if(error){toast("Could not load profiles: "+error.message);return}
- profiles=(data||[]).map(p=>({...p,avatar:p.avatar_url||defaultAvatar,watching:p.watching_url||""}));
- if(me&&!profiles.some(p=>p.id===me.id))profiles.unshift(me);
-}
-function applyAccent(color){
- if(!color)return;
- document.documentElement.style.setProperty("--accent",color);
- $("#accentColor").value=color;$("#swatch").style.background=color;
-}
-function renderFriends(){
- const list=profiles.filter(p=>p.id!==me?.id&&acceptedFriendIds.has(p.id));
- $("#friendGrid").innerHTML=list.length?list.map(p=>`<button class="card friend-chip" data-friend="${p.id}"><img class="avatar" src="${safeUrl(p.avatar)||defaultAvatar}" onerror="this.src='${defaultAvatar}'"><strong>${esc(p.username)}</strong><span class="small muted">Open private chat →</span></button>`).join(""):'<div class="empty">No accepted friends yet. Find someone by username above.</div>';
- renderRequestLists();
-}
-async function loadFriendRequests(){
- if(!currentUser)return;
- const {data,error}=await sb.from("friend_requests").select("*").or(`sender_id.eq.${currentUser.id},recipient_id.eq.${currentUser.id}`).order("created_at",{ascending:false});
- if(error){toast("Friend requests: "+error.message);return}
- friendRequests=data||[];acceptedFriendIds=new Set();
- for(const r of friendRequests)if(r.status==="accepted")acceptedFriendIds.add(r.sender_id===currentUser.id?r.recipient_id:r.sender_id);
- renderRequestLists();renderFriends();
-}
-function renderRequestLists(){
- const incoming=friendRequests.filter(r=>r.recipient_id===currentUser?.id&&r.status==="pending");
- const outgoing=friendRequests.filter(r=>r.sender_id===currentUser?.id&&r.status==="pending");
- $("#incomingRequests").innerHTML=incoming.length?incoming.map(r=>`<div class="card" style="padding:12px;margin:5px"><b>${esc(profileById(r.sender_id).username)}</b><div style="display:flex;gap:6px;margin-top:8px"><button class="pill" data-accept="${r.id}">Accept</button><button class="pill" data-decline="${r.id}">Decline</button></div></div>`).join(""):'<div class="empty">No incoming requests.</div>';
- $("#outgoingRequests").innerHTML=outgoing.length?outgoing.map(r=>`<div class="card" style="padding:12px;margin:5px">${esc(profileById(r.recipient_id).username)}<div class="small muted">Request pending</div></div>`).join(""):'<div class="empty">No sent requests.</div>';
-}
-async function requestFriend(username){
- const {data,error}=await sb.from("profiles").select("id,username").ilike("username",username).limit(10);
- if(error){toast(error.message);return}
- const target=(data||[]).find(p=>p.username.toLowerCase()===username.toLowerCase());
- if(!target){toast("No exact username found.");return}
- if(target.id===currentUser.id){toast("You can't add yourself.");return}
- const exists=friendRequests.find(r=>(r.sender_id===currentUser.id&&r.recipient_id===target.id)||(r.sender_id===target.id&&r.recipient_id===currentUser.id));
- if(exists){toast(exists.status==="accepted"?"You're already friends.":"A request already exists.");return}
- const {error:err}=await sb.from("friend_requests").insert({sender_id:currentUser.id,recipient_id:target.id,status:"pending"});
- if(err){toast(err.message);return}
- toast("Friend request sent!");await loadFriendRequests();
-}
-$("#friendSearchForm").onsubmit=e=>{e.preventDefault();requestFriend($("#friendSearchInput").value.trim())};
-document.addEventListener("click",async e=>{
- const a=e.target.closest("[data-accept]"),d=e.target.closest("[data-decline]");
- if(a||d){const b=a||d,id=b.dataset.accept||b.dataset.decline,status=a?"accepted":"declined";
-  const {error}=await sb.from("friend_requests").update({status}).eq("id",id).eq("recipient_id",currentUser.id).eq("status","pending");
-  if(error){toast(error.message);return}toast(status==="accepted"?"Friend request accepted!":"Request declined.");await loadFriendRequests();await loadProfiles();}
- const f=e.target.closest("[data-friend]");
- if(f){if(!acceptedFriendIds.has(f.dataset.friend)){toast("Accept the friend request before chatting.");return}selectedFriend=f.dataset.friend;showPage("chat");loadDirectMessages()}
-});
-
-function renderProfile(){
- const p=me||{username:"Friend",bio:"",avatar:defaultAvatar,watching:""};
- $("#profileContent").innerHTML=`<div class="profile-head"><img class="avatar lg" src="${safeUrl(p.avatar)||defaultAvatar}"><div style="flex:1"><h2>${esc(p.username)}</h2><p class="muted">${esc(p.bio||"")}</p></div></div><div class="profile-grid"><section><h3>Game Collection</h3>${games.map(g=>`<div class="collection-tile">${esc(g)}</div>`).join("")||'<div class="collection-tile">None</div>'}</section><section><h3>Currently watching</h3>${watchMarkup(p.watching)}</section></div>`;
-}
-function loadDashboard(){
- if(!me)return;
- $("#dashAvatar").src=safeUrl(me.avatar)||defaultAvatar;
- $("#dashName").textContent=me.username||"Friend";
- $("#dashBio").value=me.bio||"";
- $("#dashWatching").value=me.watching||"";
- $("#dashWatchPreview").innerHTML=watchMarkup(me.watching);
- $("#collectionTiles").innerHTML=games.map(g=>`<div class="collection-tile">${esc(g)}<button class="pill" data-remove-game="${encodeURIComponent(g)}">Remove</button></div>`).join("")||'<div class="collection-tile">No games added yet</div>';
- $("#gamesPage").innerHTML=games.map(g=>`<div class="card friend-chip">${esc(g)}</div>`).join("")||'<div class="empty">No games added yet.</div>';
-}
-function renderChatSide(){
- const p=profileById(selectedFriend);
- $("#chatProfile").innerHTML=`<img class="avatar" src="${safeUrl(p.avatar)||defaultAvatar}"><h3>${esc(p.username)}</h3><p class="small">${esc(p.bio||"")}</p><div style="margin-top:35px;font-size:12px">Currently watching${watchMarkup(p.watching)}</div>`;
-}
-function renderMessages(kind){
- const box=$("#"+(kind==="public"?"publicMessages":"directMessages"));if(!box)return;
- const arr=messages[kind]||[];
- box.innerHTML=arr.map(m=>`<div class="message ${m.user_id===me?.id?"mine":""}"><img class="avatar sm" src="${safeUrl(m.avatar)||defaultAvatar}"><div><div class="small muted">${esc(m.username||"Member")} · ${new Date(m.created_at).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})}</div><div class="bubble">${esc(m.content)}</div></div></div>`).join("")||'<div class="empty">It’s quiet in here. Say hey 👋</div>';
- box.scrollTop=box.scrollHeight;
-}
-async function loadPublic(){
- const {data,error}=await sb.from("messages").select("*").eq("room","public").order("created_at").limit(150);
- if(error){toast("Public chat: "+error.message);return}
- messages.public=(data||[]).map(m=>({...m,username:profileById(m.user_id).username,avatar:profileById(m.user_id).avatar}));
- renderMessages("public");
-}
+function safeUrl(s){try{const u=new URL(s);return ["https:","http:"].includes(u.protocol)?u.href:""}catch{return ""}}
+function youtubeId(url){try{const u=new URL(url);if(u.hostname.includes("youtu.be"))return u.pathname.slice(1);if(u.searchParams.get("v"))return u.searchParams.get("v");if(u.pathname.includes("/shorts/"))return u.pathname.split("/shorts/")[1].split("/")[0];if(u.pathname.includes("/embed/"))return u.pathname.split("/embed/")[1].split("/")[0]}catch{}return ""}
+function watchMarkup(url){if(!url)return '<div class="muted">Nothing shared yet</div>';const clean=safeUrl(url);if(!clean)return '<div class="muted">Invalid link</div>';const id=youtubeId(clean);if(id)return `<a href="${clean}" target="_blank" rel="noopener"><img class="watch-thumb" src="https://img.youtube.com/vi/${encodeURIComponent(id)}/hqdefault.jpg" alt="YouTube video thumbnail"></a><p class="small muted">Shared YouTube link · <a class="blue-link" target="_blank" rel="noopener" href="${clean}">Open video</a></p>`;return `<p><a class="blue-link" href="${clean}" target="_blank" rel="noopener">Open shared listening link ↗</a></p><p class="small muted">YouTube Music links may not provide a public thumbnail.</p>`}
+function profileById(id){return profiles.find(p=>p.id===id)||demoProfiles.find(p=>p.id===id)||{id,username:"Friend",bio:"",avatar:defaultAvatar,watching:""}}
+async function loadProfiles(){if(!sb){profiles=demoProfiles;return}const {data,error}=await sb.from("profiles").select("*").order("username");if(error){toast("Could not load profiles: "+error.message);profiles=[]}else profiles=(data||[]).map(p=>({...p,avatar:p.avatar_url||defaultAvatar,watching:p.watching_url||""}));if(me&&!profiles.some(p=>p.id===me.id))profiles.unshift(me)}
+function renderFriends(){const list=profiles.filter(p=>p.id!==me?.id && acceptedFriendIds.has(p.id));$("#friendGrid").innerHTML=list.length?list.map(p=>`<button class="card friend-chip" data-friend="${p.id}"><img class="avatar" src="${safeUrl(p.avatar)||defaultAvatar}" onerror="this.src=defaultAvatar"><strong>${esc(p.username)}</strong><span class="small muted">Open private chat →</span></button>`).join(""):'<div class="empty">No accepted friends yet. Find someone by username above.</div>';renderRequestLists()}
+async function loadFriendRequests(){if(!sb||!currentUser)return;const {data,error}=await sb.from("friend_requests").select("id,sender_id,recipient_id,status,created_at").or(`sender_id.eq.${currentUser.id},recipient_id.eq.${currentUser.id}`).order("created_at",{ascending:false});if(error){toast("Friend requests: "+error.message);return}friendRequests=data||[];acceptedFriendIds=new Set();for(const r of friendRequests){if(r.status==="accepted")acceptedFriendIds.add(r.sender_id===currentUser.id?r.recipient_id:r.sender_id)}renderRequestLists();renderFriends()}
+function renderRequestLists(){const incoming=friendRequests.filter(r=>r.recipient_id===currentUser?.id&&r.status==="pending"), outgoing=friendRequests.filter(r=>r.sender_id===currentUser?.id&&r.status==="pending");$("#incomingRequests").innerHTML=incoming.length?incoming.map(r=>{const p=profileById(r.sender_id);return `<div class="card" style="padding:12px;margin:5px"><b>${esc(p.username)}</b><div style="display:flex;gap:6px;margin-top:8px"><button class="pill" data-accept-request="${r.id}">Accept</button><button class="pill" data-decline-request="${r.id}">Decline</button></div></div>`}).join(""):'<div class="empty">No incoming requests.</div>';$("#outgoingRequests").innerHTML=outgoing.length?outgoing.map(r=>`<div class="card" style="padding:12px;margin:5px">${esc(profileById(r.recipient_id).username)}<div class="small muted">Request pending</div></div>`).join(""):'<div class="empty">No sent requests.</div>'}
+async function requestFriendByUsername(username){if(!currentUser||!sb){toast("Sign in first.");return}const {data:matches,error}=await sb.from("profiles").select("id,username").ilike("username",username).limit(2);if(error){toast(error.message);return}const target=(matches||[]).find(p=>p.username.toLowerCase()===username.toLowerCase());if(!target){toast("No exact username found.");return}if(target.id===currentUser.id){toast("You can't add yourself.");return}const existing=friendRequests.find(r=>(r.sender_id===currentUser.id&&r.recipient_id===target.id)||(r.sender_id===target.id&&r.recipient_id===currentUser.id));if(existing){toast(existing.status==="accepted"?"You're already friends.":existing.status==="pending"?"A request already exists.":"A previous request exists; ask them to send one to you.");return}const {error:insertError}=await sb.from("friend_requests").insert({sender_id:currentUser.id,recipient_id:target.id,status:"pending"});if(insertError){toast(insertError.message);return}toast("Friend request sent to "+target.username+"!");await loadFriendRequests()}
+$("#friendSearchForm").onsubmit=e=>{e.preventDefault();requestFriendByUsername($("#friendSearchInput").value.trim())};
+document.addEventListener("click",async e=>{const accept=e.target.closest("[data-accept-request]");const decline=e.target.closest("[data-decline-request]");if(accept||decline){const btn=accept||decline;const id=btn.dataset.acceptRequest||btn.dataset.declineRequest;const status=accept?"accepted":"declined";const {error}=await sb.from("friend_requests").update({status}).eq("id",id).eq("recipient_id",currentUser.id).eq("status","pending");if(error){toast(error.message);return}toast(status==="accepted"?"Friend request accepted!":"Request declined.");await loadFriendRequests();await loadProfiles();return}});
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-friend]");if(b){if(!acceptedFriendIds.has(b.dataset.friend)){toast("Accept a friend request before private messaging.");return}selectedFriend=b.dataset.friend;showPage("chat");loadDirectMessages()}});
+function renderProfile(){const p=me||{username:"Guest",bio:"",avatar:defaultAvatar,watching:""};$("#profileContent").innerHTML=`<div class="profile-head"><img class="avatar lg" src="${safeUrl(p.avatar)||defaultAvatar}" onerror="this.src=defaultAvatar"><div style="flex:1"><h2>${esc(p.username)}</h2><p class="muted">${esc(p.bio||"")}</p></div><button class="pill" data-page="chat">Chat</button></div><div class="profile-grid"><section><h3>Game Collection</h3>${games.map(g=>`<div class="collection-tile" style="display:inline-grid;margin:6px">${esc(g)}</div>`).join("")||'<div class="collection-tile">None</div>'}</section><section><h3>Currently watching on YouTube</h3>${watchMarkup(p.watching)}</section></div>`}
+function loadDashboard(){if(!me)return;$("#dashAvatar").src=safeUrl(me.avatar)||defaultAvatar;$("#dashName").textContent=me.username||"User";$("#dashBio").value=me.bio||"";$("#dashWatching").value=me.watching||"";$("#dashWatchPreview").innerHTML=watchMarkup(me.watching);$("#collectionTiles").innerHTML=games.length?games.map(g=>`<div class="collection-tile" style="display:inline-grid;margin:5px">${esc(g)}</div>`).join(""):'<div class="collection-tile">None</div>';$("#gamesPage").innerHTML=games.map(g=>`<div class="card friend-chip">${esc(g)}</div>`).join("")||'<div class="empty">No games added yet.</div>'}
+function renderChatSide(){const p=profileById(selectedFriend);$("#chatProfile").innerHTML=`<img class="avatar" src="${safeUrl(p.avatar)||defaultAvatar}"><h3>${esc(p.username)}</h3><p class="small">${esc(p.bio||"")}</p><div class="watch-status">Currently watching on <b>YouTube</b>${watchMarkup(p.watching)}</div>`}
+function renderMessages(kind){const box=$("#"+(kind==="public"?"publicMessages":"directMessages"));if(!box)return;const arr=messages[kind]||[];box.innerHTML=arr.length?arr.map(m=>`<div class="message ${m.user_id===me?.id||m.mine?'mine':''}"><img class="avatar sm" src="${safeUrl(m.avatar)||defaultAvatar}"><div><div class="small muted">${esc(m.username||"Member")} · ${new Date(m.created_at||Date.now()).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})}</div><div class="bubble">${esc(m.content)}</div></div></div>`).join(""):'<div class="empty">It’s quiet in here. Say hey 👋</div>';box.scrollTop=box.scrollHeight}
+async function loadPublic(){if(!sb){renderMessages("public");return}const {data,error}=await sb.from("messages").select("*").eq("room","public").order("created_at").limit(150);if(!error){messages.public=(data||[]).map(m=>({...m,username:profileById(m.user_id).username,avatar:profileById(m.user_id).avatar}));renderMessages("public")}}
+async function loadDirectMessages(){if(!sb||!selectedFriend||!acceptedFriendIds.has(selectedFriend)){messages.direct=[];renderMessages("direct");return}const {data,error}=await sb.from("messages").select("*").eq("room",directRoom(currentUser.id,selectedFriend)).order("created_at").limit(150);if(error){toast(error.message);return}messages.direct=(data||[]).map(m=>({...m,username:profileById(m.user_id).username,avatar:profileById(m.user_id).avatar}));renderMessages("direct")}
 function directRoom(a,b){return "dm:"+[a,b].sort().join(":")}
-async function loadDirectMessages(){
- if(!selectedFriend||!acceptedFriendIds.has(selectedFriend)){messages.direct=[];renderMessages("direct");return}
- const {data,error}=await sb.from("messages").select("*").eq("room",directRoom(currentUser.id,selectedFriend)).order("created_at").limit(150);
- if(error){toast("Private chat: "+error.message);return}
- messages.direct=(data||[]).map(m=>({...m,username:profileById(m.user_id).username,avatar:profileById(m.user_id).avatar}));
- renderMessages("direct");
-}
-async function sendMessage(kind,content){
- content=content.trim();if(!content)return;
- const room=kind==="public"?"public":directRoom(currentUser.id,selectedFriend);
- const {error}=await sb.from("messages").insert({user_id:currentUser.id,room,content});
- if(error){toast("Message failed: "+error.message);return}
- if(kind==="public")await loadPublic();else await loadDirectMessages();
-}
-$("#publicForm").onsubmit=e=>{e.preventDefault();const i=$("#publicInput"),v=i.value;i.value="";sendMessage("public",v)};
-$("#directForm").onsubmit=e=>{e.preventDefault();if(!selectedFriend||!acceptedFriendIds.has(selectedFriend)){toast("You can only message accepted friends.");return}const i=$("#directInput"),v=i.value;i.value="";sendMessage("direct",v)};
-
+async function sendMessage(kind,content){content=content.trim();if(!content)return;if(!currentUser||!sb){messages[kind].push({user_id:me?.id,mine:true,username:me?.username||"You",avatar:me?.avatar,content,created_at:new Date().toISOString()});renderMessages(kind);toast("Demo only — connect Supabase to share messages with everyone.");return}const room=kind==="public"?"public":directRoom(currentUser.id,selectedFriend);const {error}=await sb.from("messages").insert({user_id:currentUser.id,room,content});if(error){toast("Message failed: "+error.message);return}if(kind==="public")loadPublic();else loadDirectMessages()}
+$("#publicForm").onsubmit=e=>{e.preventDefault();const i=$("#publicInput");sendMessage("public",i.value);i.value=""};
+$("#directForm").onsubmit=e=>{e.preventDefault();if(!selectedFriend||!acceptedFriendIds.has(selectedFriend)){toast("You can only message accepted friends.");return}const i=$("#directInput");sendMessage("direct",i.value);i.value=""};
 $("#saveProfile").onclick=async()=>{
- const data={id:currentUser.id,username:$("#dashName").textContent.trim(),bio:$("#dashBio").value.trim(),avatar_url:me.avatar===defaultAvatar?null:me.avatar,watching_url:safeUrl($("#dashWatching").value)||null,accent_color:$("#accentColor").value};
- const {error}=await sb.from("profiles").upsert(data);
- if(error){toast("Profile save failed: "+error.message);return}
- me={...me,bio:data.bio,watching:data.watching_url||"",accent:data.accent_color};
- applyAccent(data.accent_color);await loadProfiles();loadDashboard();toast("Profile saved!");
+ if(!me||!currentUser||!sb){toast("Supabase is not connected.");return}
+ const data={id:currentUser.id,username:$("#dashName").textContent.trim(),bio:$("#dashBio").value.trim(),avatar_url:safeUrl($("#dashAvatar").dataset.customAvatar||me.avatar)||null,watching_url:safeUrl($("#dashWatching").value)||null,accent_color:$("#accentColor").value};
+ const {error}=await sb.from("profiles").upsert(data);if(error){toast("Profile save failed: "+error.message);return}
+ me={...me,bio:data.bio,watching:data.watching_url||"",accent:data.accent_color};applyAccent(data.accent_color||"#292929");await loadProfiles();applyAccent(data.accent_color);loadDashboard();toast("Profile saved!");
 };
 $("#setupForm").onsubmit=async e=>{
- e.preventDefault();
- const username=$("#setupName").value.trim();
- if(!/^[A-Za-z0-9_]{2,24}$/.test(username)){toast("Use 2–24 letters, numbers or underscores.");return}
- const data={id:currentUser.id,username,bio:$("#setupBio").value.trim(),avatar_url:safeUrl($("#setupAvatar").value)||null,watching_url:safeUrl($("#setupWatching").value)||null,accent_color:"#343434"};
- const {error}=await sb.from("profiles").upsert(data);
- if(error){toast("Setup failed: "+error.message);return}
- me={id:data.id,username,bio:data.bio,avatar:data.avatar_url||defaultAvatar,watching:data.watching_url||"",accent:data.accent_color};
- applyAccent(data.accent_color);await loadProfiles();await loadFriendRequests();await loadEntries();await loadPublic();await loadGames();
- $("#welcomeTitle").textContent="Welcome, "+username+"!";showPage("welcome");startRealtime();
+ e.preventDefault();if(!currentUser||!sb){toast("Supabase is not connected.");return}
+ const username=$("#setupName").value.trim();if(!/^[A-Za-z0-9_]{2,24}$/.test(username)){toast("Use 2–24 letters, numbers or underscores for your username.");return}
+ const data={id:currentUser.id,username,bio:$("#setupBio").value.trim(),avatar_url:safeUrl($("#setupAvatar").value)||null,watching_url:safeUrl($("#setupWatching").value)||null,accent_color:"#292929"};
+ const {error}=await sb.from("profiles").upsert(data);if(error){toast("Setup failed: "+error.message);return}
+ me={id:data.id,username,bio:data.bio,avatar:data.avatar_url||defaultAvatar,watching:data.watching_url||"",accent:data.accent_color};applyAccent(data.accent_color||"#292929");await loadProfiles();await loadFriendRequests();await loadEntries();await loadPublic();await loadGames();$("#welcomeTitle").textContent="Welcome, "+username+"!";showPage("welcome");startRealtime();
 };
-$("#editSetup").onclick=()=>{
- if(!me)return;
- $("#setupName").value=me.username||"";$("#setupBio").value=me.bio||"";
- $("#setupAvatar").value=me.avatar===defaultAvatar?"":me.avatar||"";
- $("#setupWatching").value=me.watching||"";showPage("setup");
-};
-
-async function loadGames(){
- const {data,error}=await sb.from("game_collections").select("game_name").eq("user_id",currentUser.id).order("created_at");
- if(error){toast("Could not load games: "+error.message);return}
- games=(data||[]).map(x=>x.game_name);loadDashboard();
-}
-$("#gameForm").onsubmit=async e=>{
- e.preventDefault();const val=$("#gameName").value.trim();if(!val)return;
- const {error}=await sb.from("game_collections").insert({user_id:currentUser.id,game_name:val});
- if(error){toast(error.code==="23505"?"That game is already in your collection.":error.message);return}
- $("#gameName").value="";await loadGames();toast("Game added and saved!");
-};
-document.addEventListener("click",async e=>{
- const b=e.target.closest("[data-remove-game]");if(!b)return;
- const name=decodeURIComponent(b.dataset.removeGame);
- const {error}=await sb.from("game_collections").delete().eq("user_id",currentUser.id).eq("game_name",name);
- if(error){toast(error.message);return}await loadGames();toast("Game removed.");
-});
+async function loadGames(){if(!sb||!currentUser)return;const {data,error}=await sb.from("game_collections").select("game_name").eq("user_id",currentUser.id).order("created_at");if(error){toast("Could not load games: "+error.message);return}games=(data||[]).map(x=>x.game_name);loadDashboard()}
+$("#editSetup").onclick=()=>{if(!me)return;$("#setupName").value=me.username||"";$("#setupBio").value=me.bio||"";$("#setupAvatar").value=me.avatar===defaultAvatar?"":me.avatar||"";$("#setupWatching").value=me.watching||"";showPage("setup")};
+function renderGiveaway(){const n=entries.length;$("#chance").textContent=n?Math.round(100/n)+"%":"100%";$("#enterGiveaway").disabled=Date.now()>giveawayEnds;$("#enterGiveaway").textContent=Date.now()>giveawayEnds?"Giveaway ended":entries.some(e=>e.id===me?.id)?"You're entered ✓":"Enter Giveaway";$("#giveawayCountdown").textContent=Date.now()>giveawayEnds?"This giveaway has ended.":"Ends "+new Date(giveawayEnds).toLocaleString();renderEntries()}
+async function loadEntries(){if(sb){const {data,error}=await sb.from("giveaway_entries").select("*").order("created_at");if(!error)entries=(data||[]).map(e=>({id:e.user_id,username:profileById(e.user_id).username,avatar:profileById(e.user_id).avatar,created_at:e.created_at}));const cfg=await sb.from("giveaway_config").select("ends_at").eq("id",true).maybeSingle();if(!cfg.error&&cfg.data?.ends_at)giveawayEnds=new Date(cfg.data.ends_at).getTime()}renderGiveaway()}
+$("#enterGiveaway").onclick=async()=>{if(!me){toast("Sign in and finish setup first.");return}if(Date.now()>giveawayEnds){toast("This giveaway has ended.");return}if(entries.some(e=>e.id===me.id)){toast("You're already entered!");return}if(sb&&currentUser){const {error}=await sb.from("giveaway_entries").insert({user_id:currentUser.id});if(error){toast(error.code==="23505"?"You're already entered!":error.message);return}}entries.push({id:me.id,username:me.username,avatar:me.avatar,created_at:new Date().toISOString()});renderGiveaway();toast("You're in the giveaway! Good luck 🎉")};
+function renderEntries(){$("#entriesList").innerHTML=entries.length?entries.map(e=>`<div class="entry"><img class="avatar sm" src="${safeUrl(e.avatar)||defaultAvatar}"><div><b>${esc(e.username)}</b><div class="small muted">1 Entry</div></div></div>`).join(""):'<div class="empty">No entries yet — be the first!</div>'}
+$("#gameForm").onsubmit=async e=>{e.preventDefault();const val=$("#gameName").value.trim();if(!val||!currentUser||!sb){toast("Connect to Friendz before adding games.");return}const {error}=await sb.from("game_collections").insert({user_id:currentUser.id,game_name:val});if(error){toast(error.code==="23505"?"That game is already in your collection.":error.message);return}$("#gameName").value="";await loadGames();toast("Game added and saved!")};
+function applyAccent(color){if(!color)return;document.documentElement.style.setProperty("--line",color);document.querySelectorAll(".card,.muted-card,.sidebar,.chat-side").forEach(el=>el.style.borderColor=color);$("#accentColor").value=color;$("#swatch").style.background=color}
 $("#accentColor").oninput=e=>$("#swatch").style.background=e.target.value;
-$("#applyColor").onclick=async()=>{
- const color=$("#accentColor").value;
- const {error}=await sb.from("profiles").update({accent_color:color}).eq("id",currentUser.id);
- if(error){toast(error.message);return}me.accent=color;applyAccent(color);toast("Accent colour saved!");
-};
-$("#copyDiscord").onclick=async()=>{
- try{await navigator.clipboard.writeText("https://discord.gg/tuffguyz");toast("Discord invite copied!")}
- catch{toast("Copy failed — select the link manually.")}
-};
-
-function renderGiveaway(){
- const n=entries.length;
- $("#chance").textContent=n?Math.round(100/n)+"%":"100%";
- $("#enterGiveaway").disabled=Date.now()>giveawayEnds;
- $("#enterGiveaway").textContent=Date.now()>giveawayEnds?"Giveaway ended":entries.some(e=>e.id===me?.id)?"You're entered ✓":"Enter Giveaway";
- $("#giveawayCountdown").textContent=Date.now()>giveawayEnds?"This giveaway has ended.":"Ends "+new Date(giveawayEnds).toLocaleString();
- renderEntries();
-}
-async function loadEntries(){
- const {data,error}=await sb.from("giveaway_entries").select("*").order("created_at");
- if(error){toast("Giveaway entries: "+error.message);return}
- entries=(data||[]).map(e=>({id:e.user_id,username:profileById(e.user_id).username,avatar:profileById(e.user_id).avatar,created_at:e.created_at}));
- const cfg=await sb.from("giveaway_config").select("ends_at").eq("id",true).maybeSingle();
- if(!cfg.error&&cfg.data?.ends_at)giveawayEnds=new Date(cfg.data.ends_at).getTime();
- renderGiveaway();
-}
-$("#enterGiveaway").onclick=async()=>{
- if(Date.now()>giveawayEnds){toast("This giveaway has ended.");return}
- if(entries.some(e=>e.id===me.id)){toast("You're already entered!");return}
- const {error}=await sb.from("giveaway_entries").insert({user_id:currentUser.id});
- if(error){toast(error.code==="23505"?"You're already entered!":error.message);return}
- await loadEntries();toast("You're in the giveaway! Good luck 🎉");
-};
-function renderEntries(){
- $("#entriesList").innerHTML=entries.map(e=>`<div class="entry"><img class="avatar sm" src="${safeUrl(e.avatar)||defaultAvatar}"><div><b>${esc(e.username)}</b><div class="small muted">1 Entry</div></div></div>`).join("")||'<div class="empty">No entries yet — be the first!</div>';
-}
-function applyAccent(color){if(!color)return;document.documentElement.style.setProperty("--accent",color);$("#accentColor").value=color;$("#swatch").style.background=color}
-function startRealtime(){
- if(realtime)sb.removeChannel(realtime);
- realtime=sb.channel("friendz-live")
- .on("postgres_changes",{event:"*",schema:"public",table:"messages"},p=>{if(p.new?.room==="public")loadPublic();else if(selectedFriend&&p.new?.room===directRoom(currentUser.id,selectedFriend))loadDirectMessages()})
- .on("postgres_changes",{event:"*",schema:"public",table:"profiles"},async()=>{await loadProfiles();renderFriends();renderChatSide()})
- .on("postgres_changes",{event:"*",schema:"public",table:"friend_requests"},()=>loadFriendRequests())
- .on("postgres_changes",{event:"*",schema:"public",table:"giveaway_entries"},()=>loadEntries())
- .subscribe();
-}
-async function bootUser(user){
- currentUser=user;
- const {data,error}=await sb.from("profiles").select("*").eq("id",user.id).maybeSingle();
- if(error)throw error;
- if(data){
-  me={id:data.id,username:data.username,bio:data.bio||"",avatar:data.avatar_url||defaultAvatar,watching:data.watching_url||"",accent:data.accent_color||"#343434"};
-  applyAccent(me.accent);await loadProfiles();await loadFriendRequests();await loadEntries();await loadPublic();await loadGames();showPage("home");startRealtime();
- }else{
-  me={id:user.id,username:"Friend"+user.id.replace(/-/g,"").slice(0,6),bio:"",avatar:defaultAvatar,watching:""};
-  $("#setupName").value=me.username;showPage("setup");
- }
-}
+$("#applyColor").onclick=async()=>{if(!currentUser||!sb){toast("Connect to Friendz before saving colours.");return}const color=$("#accentColor").value;const {error}=await sb.from("profiles").update({accent_color:color}).eq("id",currentUser.id);if(error){toast("Colour save failed: "+error.message);return}me.accent=color;applyAccent(color);toast("Accent colour saved!")};
+$("#copyDiscord").onclick=async()=>{try{await navigator.clipboard.writeText("https://discord.gg/tuffguyz");toast("Discord invite copied!")}catch{toast("Copy failed — select the link manually.")}};
+// Friendz uses anonymous Supabase auth: no email, password or Google login screen.
 async function startFriendz(){
+ if(!sb){$("#authStatus").textContent="Supabase connection is not configured.";return}
  try{
   const existing=await sb.auth.getSession();
   if(existing.error)throw existing.error;
@@ -475,19 +146,13 @@ async function startFriendz(){
   const created=await sb.auth.signInAnonymously();
   if(created.error)throw created.error;
   await bootUser(created.data.user);
- }catch(err){$("#authStatus").textContent="Could not connect: "+err.message+". Make sure Anonymous Sign-Ins are enabled in Supabase Authentication settings."}
+ }catch(err){$("#authStatus").textContent="Could not connect: "+err.message+". Enable Anonymous Sign-Ins in Supabase Authentication settings."}
 }
-if(sb){
- startFriendz();
- sb.auth.onAuthStateChange((_event,session)=>{if(session&&!currentUser)bootUser(session.user).catch(e=>toast(e.message))});
-}
-setInterval(()=>{
- if($("#giveaways").classList.contains("active")){
-  const left=giveawayEnds-Date.now();
-  if(left<=0){$("#giveawayCountdown").textContent="This giveaway has ended.";$("#enterGiveaway").disabled=true;$("#enterGiveaway").textContent="Giveaway ended"}
-  else{const d=Math.floor(left/86400000),h=Math.floor(left%86400000/3600000),m=Math.floor(left%3600000/60000);$("#giveawayCountdown").textContent=`Ends in ${d}d ${h}h ${m}m`}
- }
-},30000);
+async function bootUser(user){currentUser=user;const {data,error}=await sb.from("profiles").select("*").eq("id",user.id).maybeSingle();if(error)toast(error.message);if(data){me={id:data.id,username:data.username,bio:data.bio||"",avatar:data.avatar_url||defaultAvatar,watching:data.watching_url||"",accent:data.accent_color};applyAccent(data.accent_color||"#292929");await loadProfiles();await loadFriendRequests();await loadEntries();await loadPublic();await loadGames();showPage("home");startRealtime()}else{me={id:user.id,username:"Friend"+user.id.replace(/-/g,"").slice(0,6),bio:"",avatar:defaultAvatar,watching:""};$("#setupName").value=me.username;showPage("setup")}}
+function startRealtime(){if(!sb)return;if(realtime)sb.removeChannel(realtime);realtime=sb.channel("friendz-live").on("postgres_changes",{event:"*",schema:"public",table:"messages"},payload=>{if(payload.new?.room==="public")loadPublic();else if(selectedFriend&&payload.new?.room===directRoom(currentUser.id,selectedFriend))loadDirectMessages()}).on("postgres_changes",{event:"*",schema:"public",table:"profiles"},()=>loadProfiles().then(()=>{renderFriends();renderChatSide()})).on("postgres_changes",{event:"*",schema:"public",table:"friend_requests"},()=>loadFriendRequests()).on("postgres_changes",{event:"*",schema:"public",table:"giveaway_entries"},()=>loadEntries()).subscribe()}
+$("#logoutBtn").onclick=()=>toast("Friendz uses an anonymous browser identity, so there is no login/logout. Keep this browser data to retain your profile.");
+if(sb){startFriendz();sb.auth.onAuthStateChange((_event,session)=>{if(session&&!currentUser)bootUser(session.user)})}else{$("#authStatus").textContent="Supabase connection is not configured. Check the project URL and publishable key.";profiles=demoProfiles;entries=[{id:"demo112",username:"User 112",avatar:defaultAvatar}];}
+document.addEventListener("click",e=>{if(e.target.id==="seeEntries")showPage("entries")});
+setInterval(()=>{if($("#giveawayCountdown")&&$("#giveaways").classList.contains("active")){const left=giveawayEnds-Date.now();if(left<=0){$("#giveawayCountdown").textContent="This giveaway has ended.";$("#enterGiveaway").disabled=true;$("#enterGiveaway").textContent="Giveaway ended"}else{const d=Math.floor(left/86400000),h=Math.floor(left%86400000/3600000),m=Math.floor(left%3600000/60000);$("#giveawayCountdown").textContent=`Ends in ${d}d ${h}h ${m}m`}}},30000);
 </script>
-</body>
-</html>
+</body></html>
